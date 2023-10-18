@@ -6,17 +6,10 @@
 <body>
     <h1>Meeting Cost Calculator</h1>
     <div id="form-container">
-        <label for="role-select">Select Role:</label>
-        <select id="role-select">
-            <option value="art-director">Art Director</option>
-            <option value="creative-director">Creative Director</option>
-            <option value="copywriter">Copywriter</option>
-            <option value="producer">Producer</option>
-        </select>
-
         <label for="people">Number of People:</label>
         <input type="number" id="people" name="people" required>
-
+        <label for="role">Role:</label>
+        <input type="text" id="role" name="role" required>
         <label for="hourly-rate">Hourly Rate:</label>
         <input type="number" id="hourly-rate" name="hourly-rate" required>
 
@@ -72,6 +65,19 @@ button {
     const attendees = [];
     let totalCost = 0;
     let interval;
+
+
+    addAttendeeButton.click(function () {
+        const role = $('#role').val(); // Get the user-entered role title
+        const people = parseInt(peopleInput.val());
+        const hourlyRate = parseFloat(hourlyRateInput.val());
+
+        if (people > 0 && hourlyRate > 0) {
+            attendees.push({ role, people, hourlyRate });
+            clearFormInputs();
+            displayAttendee(role, people, hourlyRate);
+        }
+    });
 
     addAttendeeButton.click(function () {
         const role = roleSelect.val();
