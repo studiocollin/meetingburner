@@ -26,7 +26,9 @@
 
     <div id="meeting-cost-display">
         <p>Total Meeting Cost: $<span id="meeting-cost">0.00</span></p>
+        <button id="stop-meeting">Stop Meeting</button>
         <ul id="attendee-list"></ul>
+        <div id="final-cost"></div>
     </div>
     <style>
         body {
@@ -88,7 +90,15 @@ button {
             interval = setInterval(updateMeetingCost, 1000);
         }
     });
+    const stopMeetingButton = $('#stop-meeting'); // New button
+    const finalCostDisplay = $('#final-cost'); // New element to display the final cost
 
+    stopMeetingButton.click(function () {
+        clearInterval(interval); // Stop the meeting
+
+        // Display the final meeting cost
+        finalCostDisplay.text(`This meeting burned $${totalCost.toFixed(2)}`);
+    });
     function updateMeetingCost() {
         totalCost = attendees.reduce((acc, attendee) => {
             return acc + attendee.people * attendee.hourlyRate;
