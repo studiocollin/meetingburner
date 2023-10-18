@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <h1>Meeting Cost Calculator</h1>
+    <div id="form-container">
+        <label for="role-select">Select Role:</label>
+        <select id="role-select">
+            <option value="art-director">Art Director</option>
+            <option value="creative-director">Creative Director</option>
+            <option value="copywriter">Copywriter</option>
+            <option value="producer">Producer</option>
+        </select>
+
+        <label for="people">Number of People:</label>
+        <input type="number" id="people" name="people" required>
+
+        <label for="hourly-rate">Hourly Rate:</label>
+        <input type="number" id="hourly-rate" name="hourly-rate" required>
+
+        <button id="add-attendee">Add Attendee</button>
+        <button id="start-meeting">Start Meeting</button>
+    </div>
+
+    <div id="meeting-cost-display">
+        <p>Total Meeting Cost: $<span id="meeting-cost">0.00</span></p>
+        <ul id="attendee-list"></ul>
+    </div>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+}
+
+#form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+label {
+    margin-right: 10px;
+}
+
+button {
+    margin-top: 10px;
+}
+
+#meeting-cost-display {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="script.js"></script>
+    <script>
+  $(document).ready(function () {
+    const roleSelect = $('#role-select');
+    const peopleInput = $('#people');
+    const hourlyRateInput = $('#hourly-rate');
+    const addAttendeeButton = $('#add-attendee');
+    const startMeetingButton = $('#start-meeting');
+    const meetingCostDisplay = $('#meeting-cost');
+    const attendeeList = $('#attendee-list'); // New element to display attendees
+
+    const attendees = [];
+    let totalCost = 0;
+    let interval;
+
+    addAttendeeButton.click(function () {
+        const role = roleSelect.val();
+        const people = parseInt(peopleInput.val());
+        const hourlyRate = parseFloat(hourlyRateInput.val());
+
+        if (people > 0 && hourlyRate > 0) {
+            attendees.push({ role, people, hourlyRate });
+            clearFormInputs();
+            displayAttendee(role, people, hourlyRate); // Display the added attendee
+        }
+    });
+
+    startMeetingButton.click(function () {
+        if (attendees.length > 0 && !interval) {
+            interval = setInterval(updateMeetingCost, 1000);
+        }
+    });
+
+    function updateMeetingCost() {
+        totalCost = attendees.reduce((acc, attendee) => {
+            return acc + attendee.people * attendee.hourlyRate;
+        }, totalCost);
+        meetingCostDisplay.text(totalCost.toFixed(2))
+    }
+
+    function displayAttendee(role, people, hourlyRate) {
+        const attendeeInfo = `Role: ${role}, Amount: ${people}, Rate: $${hourlyRate.toFixed(2)}`;
+        const listItem = $('<li>').text(attendeeInfo);
+        attendeeList.append(listItem);
+    }
+
+    function clearFormInputs() {
+        roleSelect.val('');
+        peopleInput.val('');
+        hourlyRateInput.val('');
+    }
+});
+    </script>
+    
+</body>
+</html>
